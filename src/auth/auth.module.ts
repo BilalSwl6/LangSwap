@@ -18,7 +18,7 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get('JWT_SECRET'),
+        secret: config.get('JWT_ACCESS_SECRET'),
         signOptions: { expiresIn: '15m' }, // short life access token
       }),
     }),
@@ -26,4 +26,4 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
 })
-export class AuthModule {}
+export class AuthModule { }
