@@ -11,12 +11,17 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 import { User } from './entities/user.entity';
 
 @Controller('users')
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@GetUser() user: User) {
     return user;
+  }
+
+  @Get('protected')
+  demo() {
+    return 'This is protected route';
   }
 }
