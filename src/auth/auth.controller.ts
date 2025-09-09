@@ -32,12 +32,12 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(@GetUser() user: User) {
-    return this.authService.logout(user.id); // user.id is typed as string/number
+    return this.authService.logout(user.id);
   }
 
   @UseGuards(RefreshTokenGuard)
   @Post('refresh')
-  async refreshTokens(@GetUser() user: any) {
+  async refreshTokens(@GetUser() user: { sub: string; refreshToken: string }) {
     return this.authService.refreshTokens(user.sub, user.refreshToken);
   }
 }

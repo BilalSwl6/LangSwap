@@ -3,6 +3,9 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '../interfaces/jwt-payload.interface';
+import { FastifyRequest } from 'fastify';
+
+export type JwtPayloadWithRefresh = JwtPayload & { refreshToken: string };
 
 @Injectable()
 export class RefreshTokenStrategy extends PassportStrategy(
@@ -17,15 +20,17 @@ export class RefreshTokenStrategy extends PassportStrategy(
     });
   }
 
-  validate(req: any, payload: JwtPayload) {
-    const authHeader = req.headers?.authorization || req.get?.('Authorization');
-    const refreshToken = authHeader?.replace('Bearer', '').trim();
+  validate(req: FastifyRequest, payload: JwtPayload): JwtPayloadWithRefresh {
+    const rawAuthHeader = req.headers['authorization'];
+    const authHeader =
+      typeof rawAuthHeader === 'string' ? rawAuthHeader : undefined;
+
+    const refreshToken = authHeader?.replace(/^Bearer\s+/i, '').trim();
 
     if (!refreshToken) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('token missing');
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     return { ...payload, refreshToken };
   }
 }

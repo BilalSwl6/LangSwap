@@ -1,3 +1,1 @@
-export class SignupDto {
-  //
-}
+export class SignupDto {}
