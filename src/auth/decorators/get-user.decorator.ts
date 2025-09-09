@@ -3,7 +3,7 @@ import { FastifyRequest } from 'fastify';
 import { User } from '../../users/entities/user.entity';
 
 export interface FastifyRequestWithUser extends FastifyRequest {
-  user: User; // required if you always set it
+  user: User;
 }
 
 export const GetUser = createParamDecorator(
