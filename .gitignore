@@ -63,3 +63,4 @@ database.sqlite
 .idx/
 .wakatime-project
 .vscode/
+demo/

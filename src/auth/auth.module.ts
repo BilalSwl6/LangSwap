@@ -8,6 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
+import { MailsModule } from 'src/mails/mails.module';
 
 @Module({
   imports: [
@@ -22,8 +23,9 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
         signOptions: { expiresIn: '15m' }, // short life access token
       }),
     }),
+    MailsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, RefreshTokenStrategy],
 })
-export class AuthModule { }
+export class AuthModule {}

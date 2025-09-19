@@ -5,6 +5,9 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import fastifyCookie from '@fastify/cookie';
+import fastifyCors from '@fastify/cors';
+import type { FastifyInstance } from 'fastify';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -12,11 +15,27 @@ async function bootstrap() {
     new FastifyAdapter({ logger: true }),
   );
 
+  const fastify = app
+    .getHttpAdapter()
+    .getInstance() as unknown as FastifyInstance;
+
+  // Register cookie parser
+  await fastify.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET,
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  await fastify.register(fastifyCors, {
+    origin: true,
+    credentials: true, // allow cookies/auth headers
+  });
+
+  // Swagger setup
   const config = new DocumentBuilder()
     .setTitle('API Docs')
     .setDescription('Interactive documentation for your API')
     .setVersion('1.0')
-    .addBearerAuth() // if you use JWT
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

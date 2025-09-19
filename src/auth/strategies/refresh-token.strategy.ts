@@ -14,22 +14,20 @@ export class RefreshTokenStrategy extends PassportStrategy(
 ) {
   constructor(configService: ConfigService) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (req: FastifyRequest) => req.cookies.refresh ?? null,
+        ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ]),
       secretOrKey: configService.get<string>('JWT_REFRESH_SECRET')!,
       passReqToCallback: true,
     });
   }
 
   validate(req: FastifyRequest, payload: JwtPayload): JwtPayloadWithRefresh {
-    const rawAuthHeader = req.headers['authorization'];
-    const authHeader =
-      typeof rawAuthHeader === 'string' ? rawAuthHeader : undefined;
+    const refreshToken =
+      req.cookies?.refresh || ExtractJwt.fromAuthHeaderAsBearerToken()(req);
 
-    const refreshToken = authHeader?.replace(/^Bearer\s+/i, '').trim();
-
-    if (!refreshToken) {
-      throw new UnauthorizedException('token missing');
-    }
+    if (!refreshToken) throw new UnauthorizedException('Refresh token missing');
 
     return { ...payload, refreshToken };
   }
