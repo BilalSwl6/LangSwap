@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -12,6 +12,9 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
+  findAll() {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
@@ -20,21 +23,26 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     const existingUser = await this.usersRepository.findOne({
-      where: { email: createUserDto.email },
+      where: [
+        { email: createUserDto.email },
+        { username: createUserDto.username },
+      ],
     });
-    const existingUsername = await this.usersRepository.findOne({
-      where: { username: createUserDto.username },
-    });
+
     if (existingUser) {
-      throw new ConflictException('Email already exists');
-    } else if (existingUsername) {
-      throw new ConflictException('Username already exists');
+      if (existingUser.email === createUserDto.email) {
+        throw new ConflictException('Email already exists');
+      }
+      if (existingUser.username === createUserDto.username) {
+        throw new ConflictException('Username already exists');
+      }
     }
-    // const salt_rounds = this.configService.get<number>('BCRYPT_SALT_ROUNDS')
-    const salt_rounds =
+
+    const saltRounds =
       this.configService.get<number>('BCRYPT_SALT_ROUNDS') ?? 10;
-    const salt = await bcrypt.genSalt(Number(salt_rounds));
+    const salt = await bcrypt.genSalt(Number(saltRounds));
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
+
     const user = this.usersRepository.create({
       ...createUserDto,
       password: hashedPassword,
@@ -50,13 +58,8 @@ export class UsersService {
     return this.usersRepository.findOne({ where: { id } });
   }
 
-  findAll() {
-    return `This action returns all users`;
-  }
-
-  findOne(id: string): Promise<User | null> {
-    const user = this.usersRepository.findOne({ where: { id } });
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+  async findOne(id: string): Promise<User> {
+    const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -75,7 +78,11 @@ export class UsersService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(userId: string): Promise<DeleteResult> {
+    const result = await this.usersRepository.delete(userId);
+    if (result.affected === 0) {
+      throw new NotFoundException('User not found');
+    }
+    return result;
   }
 }

@@ -25,7 +25,12 @@ export class AuthService {
     await this.updateRefreshToken(user.id, tokens.refreshToken);
 
     return {
-      user: { id: user.id, email: user.email },
+      user: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        username: user.username,
+      },
       ...tokens,
     };
   }
@@ -36,7 +41,12 @@ export class AuthService {
     await this.updateRefreshToken(user.id, tokens.refreshToken);
 
     return {
-      user: { id: user.id, email: user.email },
+      user: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        username: user.username,
+      },
       ...tokens,
     };
   }

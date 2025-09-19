@@ -15,9 +15,16 @@ import { User } from './entities/user.entity';
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
   @Get('profile')
   getProfile(@GetUser() user: User) {
-    return user;
+    return {
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      username: user.username,
+      is_active: user.is_active,
+    };
   }
 
   @Get('protected')
