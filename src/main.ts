@@ -24,7 +24,6 @@ async function bootstrap() {
     secret: process.env.COOKIE_SECRET,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   await fastify.register(fastifyCors, {
     origin: true,
     credentials: true, // allow cookies/auth headers
@@ -41,8 +40,9 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(3001, '127.0.0.1');
-  console.log('\n\nhttp://127.0.0.1:3001\n\n');
+  const port = process.env.PORT || 3000;
+  await app.listen(port, '0.0.0.0');
+  console.log(`\n\nServer listening on port ${port}`);
 }
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 bootstrap();
