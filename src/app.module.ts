@@ -1,12 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { join } from 'path';
+import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MailsModule } from './mails/mails.module';
+import { AppDataSource } from './database/data-source';
 
 @Module({
   imports: [
@@ -14,20 +13,10 @@ import { MailsModule } from './mails/mails.module';
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory(configService: ConfigService) {
-        return {
-          type: 'sqlite',
-          database: configService.get('DB_PATH'),
-          entities: [join(__dirname, '**/*.entity.{js,ts}')],
-          synchronize: true, // disable/false is production
-        };
-      },
+      useFactory: () => AppDataSource.options,
     }),
     AuthModule,
     UsersModule,
-    MailsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

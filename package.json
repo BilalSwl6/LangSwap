@@ -17,7 +17,27 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+        
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/database/data-source.ts",
+    "migration:create": "typeorm-ts-node-commonjs migration:create",
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/database/data-source.ts",
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/database/data-source.ts",
+    
+    "db:auto-migrate": "pnpm run migration:generate src/database/migrations/AutoMigration-$(date +%Y%m%d-%H%M%S)",
+    "db:commit": "pnpm run db:auto-migrate && pnpm run migration:run",
+    "db:reset": "pnpm run schema:drop && pnpm run migration:run",
+    "db:fresh": "rm -f database.sqlite && pnpm run migration:run",
+    
+    "db:update": "pnpm run migration:generate src/database/migrations/UpdateSchema-$(date +%Y%m%d-%H%M%S) && pnpm run migration:run",
+    "db:sync": "pnpm run db:commit",
+    
+    "schema:drop": "typeorm-ts-node-commonjs schema:drop -d src/database/data-source.ts",
+    "schema:sync": "typeorm-ts-node-commonjs schema:sync -d src/database/data-source.ts",
+    "schema:log": "typeorm-ts-node-commonjs schema:log -d src/database/data-source.ts",
+    
+    "dev:fresh": "pnpm run db:fresh && pnpm run start:dev",
+    "dev:reset": "pnpm run db:reset && pnpm run start:dev"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
@@ -34,7 +54,9 @@
     "bcrypt": "^6.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
+    "dotenv": "^17.2.2",
     "fastify": "^5.6.0",
+    "glob": "^11.0.3",
     "nodemailer": "^7.0.6",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
@@ -53,9 +75,11 @@
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/testing": "^11.1.6",
     "@types/bcrypt": "^6.0.0",
+    "@types/glob": "^9.0.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.3.1",
     "@types/passport-jwt": "^4.0.1",
+    "@types/pg": "^8.15.5",
     "@types/supertest": "^6.0.3",
     "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.8",
