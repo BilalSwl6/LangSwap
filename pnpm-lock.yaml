@@ -50,9 +50,15 @@ importers:
       class-validator:
         specifier: ^0.14.2
         version: 0.14.2
+      dotenv:
+        specifier: ^17.2.2
+        version: 17.2.2
       fastify:
         specifier: ^5.6.0
         version: 5.6.0
+      glob:
+        specifier: ^11.0.3
+        version: 11.0.3
       nodemailer:
         specifier: ^7.0.6
         version: 7.0.6
@@ -102,6 +108,9 @@ importers:
       '@types/bcrypt':
         specifier: ^6.0.0
         version: 6.0.0
+      '@types/glob':
+        specifier: ^9.0.0
+        version: 9.0.0
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -111,6 +120,9 @@ importers:
       '@types/passport-jwt':
         specifier: ^4.0.1
         version: 4.0.1
+      '@types/pg':
+        specifier: ^8.15.5
+        version: 8.15.5
       '@types/supertest':
         specifier: ^6.0.3
         version: 6.0.3
@@ -1079,6 +1091,10 @@ packages:
   '@types/express@5.0.3':
     resolution: {integrity: sha512-wGA0NX93b19/dZC1J18tKWVIYWyyF2ZjT9vin/NRu0qzzvfVzWjs04iq2rQ3H65vCTQYlRqs3YHfY7zjdV+9Kw==}
 
+  '@types/glob@9.0.0':
+    resolution: {integrity: sha512-00UxlRaIUvYm4R4W9WYkN8/J+kV8fmOQ7okeH6YFtGWFMt3odD45tpG5yA5wnL7HE6lLgjaTW5n14ju2hl2NNA==}
+    deprecated: This is a stub types definition. glob provides its own type definitions, so you do not need this installed.
+
   '@types/http-errors@2.0.5':
     resolution: {integrity: sha512-r8Tayk8HJnX0FztbZN7oVqGccWgw98T/0neJphO91KkmOzug1KkofZURD4UaD5uH8AqcFLfdPErnBod0u71/qg==}
 
@@ -1129,6 +1145,9 @@ packages:
 
   '@types/passport@1.0.17':
     resolution: {integrity: sha512-aciLyx+wDwT2t2/kJGJR2AEeBz0nJU4WuRX04Wu9Dqc5lSUtwu0WERPHYsLhF9PtseiAMPBGNUOtFjxZ56prsg==}
+
+  '@types/pg@8.15.5':
+    resolution: {integrity: sha512-LF7lF6zWEKxuT3/OR8wAZGzkg4ENGXFNyiV/JeOt9z5B+0ZVwbql9McqX5c/WStFq1GaGso7H1AzP/qSzmlCKQ==}
 
   '@types/pug@2.0.10':
     resolution: {integrity: sha512-Sk/uYFOBAB7mb74XcpizmH0KOR2Pv3D2Hmrh1Dmy5BmK3MpdSa5kqZcg6EKBdklU0bFXX9gCfzvpnyUehrPIuA==}
@@ -1981,6 +2000,10 @@ packages:
 
   dotenv@16.6.1:
     resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+    engines: {node: '>=12'}
+
+  dotenv@17.2.2:
+    resolution: {integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -5643,6 +5666,10 @@ snapshots:
       '@types/express-serve-static-core': 5.0.7
       '@types/serve-static': 1.15.8
 
+  '@types/glob@9.0.0':
+    dependencies:
+      glob: 11.0.3
+
   '@types/http-errors@2.0.5': {}
 
   '@types/istanbul-lib-coverage@2.0.6': {}
@@ -5702,6 +5729,12 @@ snapshots:
   '@types/passport@1.0.17':
     dependencies:
       '@types/express': 5.0.3
+
+  '@types/pg@8.15.5':
+    dependencies:
+      '@types/node': 24.3.1
+      pg-protocol: 1.10.3
+      pg-types: 2.2.0
 
   '@types/pug@2.0.10':
     optional: true
@@ -6633,11 +6666,13 @@ snapshots:
 
   dotenv-expand@12.0.1:
     dependencies:
-      dotenv: 16.4.7
+      dotenv: 16.6.1
 
   dotenv@16.4.7: {}
 
   dotenv@16.6.1: {}
+
+  dotenv@17.2.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
