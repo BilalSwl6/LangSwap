@@ -30,7 +30,7 @@ export class PasswordResetToken {
   isUsed: boolean;
 
   @Column({
-    type: DB_PROVIDER === 'postgres' ? 'timestamptz' : 'timestamp',
+    type: DB_PROVIDER === 'postgres' ? 'timestamptz' : 'datetime',
     name: 'expires_at',
   })
   expiresAt: Date;
@@ -59,7 +59,7 @@ export class EmailConfirmationToken {
   isUsed: boolean;
 
   @Column({
-    type: DB_PROVIDER === 'postgres' ? 'timestamptz' : 'timestamp',
+    type: DB_PROVIDER === 'postgres' ? 'timestamptz' : 'datetime',
     name: 'expires_at',
   })
   expiresAt: Date;
