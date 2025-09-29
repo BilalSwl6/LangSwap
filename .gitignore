@@ -64,3 +64,4 @@ database.sqlite
 .wakatime-project
 .vscode/
 demo/
+.env.dev
